@@ -1,4 +1,4 @@
-# Código Fuente – COStop
+# Código Fuente
 
 ## Archivos principales
 
@@ -31,7 +31,6 @@ Detalle de cada función en [`../docs/README.md`](../docs/README.md).
 ## Comportamiento
 
 | Estado | LED RGB | Buzzer |
-|--------|---------|--------|
 | Calentamiento (`WARMUP`) | Azul intermitente | Apagado |
 | Normal (`NORMAL`) | Verde, destello breve cada 3 s ("latido") | Apagado |
 | Alerta (`ALERTA`) | Amarillo intermitente | Pitidos cortos |
