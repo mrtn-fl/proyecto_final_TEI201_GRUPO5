@@ -10,7 +10,7 @@ const int PIN_B      = 9;
 const int PIN_BTN    = 0;   // botón BOOT (provisorio). Con pulsador real: 7
 
 // ---------- Opciones de hardware ----------
-const bool BUZZER_ACTIVO   = true;   // true: activo (suena con HIGH). false: pasivo (usa tone)
+const bool BUZZER_ACTIVO   = false;  // true: activo (suena con HIGH). false: pasivo (usa tone)
 const bool LED_ANODO_COMUN = false;  // KY-016 normal: false
 
 // ---------- Parámetros (ajustables) ----------
@@ -23,7 +23,7 @@ const unsigned long SILENCIO_MS = 30000;   // equipo real: 300000 (5 min)
 const unsigned long MUESTREO_MS = 1000;
 const unsigned long DHT_MS      = 2000;
 
-DHT dht(PIN_DHT, DHT22);
+DHT dht(PIN_DHT, DHT11);
 
 enum Estado { WARMUP, NORMAL, ALERTA, ALARMA, FALLA };
 Estado estado = WARMUP;
@@ -124,7 +124,7 @@ void loop() {
   unsigned long t = millis();
   revisarBoton();
 
-  // --- DHT22 cada 2 s ---
+  // --- DHT11 cada 2 s ---
   if (t - tDHT >= DHT_MS) {
     tDHT = t;
     float h = dht.readHumidity();

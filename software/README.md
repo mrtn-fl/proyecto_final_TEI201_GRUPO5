@@ -2,7 +2,7 @@
 
 Esta carpeta contiene el firmware y la documentación técnica de **COStop**, la alarma doméstica de monóxido de carbono (CO) de bajo costo para hogares del sur de Chile con calefacción a combustión.
 
-El firmware corre en un **ESP32-S3 Super Mini**, lee un sensor de gas MQ y un sensor DHT22 (temperatura/humedad), y comunica el estado del ambiente con un LED RGB y un buzzer.
+El firmware corre en un **ESP32-S3 Super Mini**, lee un sensor de gas MQ y un sensor DHT11 (temperatura/humedad), y comunica el estado del ambiente con un LED RGB y un buzzer.
 
 ## Contenido
 
@@ -57,7 +57,7 @@ Los parámetros ajustables están al inicio del código:
 
 ```cpp
 // Pines (ESP32-S3 Super Mini)
-const int PIN_DHT    = 4;   // Datos del DHT22
+const int PIN_DHT    = 4;   // Datos del DH11
 const int PIN_MQ     = 1;   // Entrada analógica del sensor MQ
 const int PIN_BUZZER = 5;   // Buzzer
 const int PIN_R      = 6;   // LED RGB - rojo
@@ -87,8 +87,8 @@ Encendido → CALENTAMIENTO → NORMAL ⇄ ALERTA ⇄ ALARMA
 ```
 
 ### Módulos principales
-1. **Inicialización (`setup`)** – Configura pines, serial (115200), ADC del sensor MQ y DHT22; el calentamiento corre durante los primeros `WARMUP_MS`.
-2. **Lectura de sensores** – MQ cada 1 s (promedio de 4 lecturas) y DHT22 cada 2 s.
+1. **Inicialización (`setup`)** – Configura pines, serial (115200), ADC del sensor MQ y DHT11; el calentamiento corre durante los primeros `WARMUP_MS`.
+2. **Lectura de sensores** – MQ cada 1 s (promedio de 4 lecturas) y DHT11 cada 2 s.
 3. **Procesamiento** – Compara con los umbrales usando **histéresis** y **confirmación de 3 lecturas consecutivas** para evitar falsas alarmas.
 4. **Actuación** – Controla el LED RGB y el buzzer según el estado.
 

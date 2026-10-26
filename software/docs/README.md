@@ -77,7 +77,7 @@ int obj = objetivo(rawMQ, nivel);
 7. Compilar y subir.
 8. Abrir el Monitor Serie a **115200 baudios**.
 
-Conexiones (pines): DHT22 → 4, MQ → 1, buzzer → 5, LED RGB → R 6 / G 8 / B 9, botón → 0 (BOOT, provisorio).
+Conexiones (pines): DHT11 → 4, MQ → 1, buzzer → 5, LED RGB → R 6 / G 8 / B 9, botón → 0 (BOOT, provisorio).
 
 
 ## Manual de Operación
@@ -106,7 +106,7 @@ Conexiones (pines): DHT22 → 4, MQ → 1, buzzer → 5, LED RGB → R 6 / G 8 /
 - Solución: instalar DHT sensor library y Adafruit Unified Sensor.
 
 **Problema 2: LED magenta con doble pitido (falla)**
-- Causa probable: el MQ entrega 0 de forma sostenida (5 lecturas) o el DHT22 falla 3 lecturas seguidas (cableado suelto o pin incorrecto).
+- Causa probable: el MQ entrega 0 de forma sostenida (5 lecturas) o el DHT11 falla 3 lecturas seguidas (cableado suelto o pin incorrecto).
 - Solución: revisar el cableado, ver `DHT_fallas` y `MQ=` en el Monitor Serie y reiniciar.
 
 **Problema 3: Falsas alarmas al encender**

@@ -5,7 +5,7 @@
 El código solo incluye una librería directamente (`#include <DHT.h>`):
 
 1. **DHT sensor library** (Adafruit) – v[ x ]
-   - Propósito: leer temperatura y humedad del DHT22 (`dht.readTemperature()`, `dht.readHumidity()`).
+   - Propósito: leer temperatura y humedad del DHT11 (`dht.readTemperature()`, `dht.readHumidity()`).
    - Instalación: `Herramientas > Administrar bibliotecas` y buscar "DHT sensor library".
 
 2. **Adafruit Unified Sensor** – v[ x ]

@@ -8,8 +8,8 @@ Sketch único del firmware para el ESP32-S3 Super Mini. Todo el código (pines, 
 > Arduino IDE exige que el `.ino` esté dentro de una carpeta con el mismo nombre, por eso la ruta es `codigo_esp32/codigo_esp32.ino`.
 
 **Estructura:**
-- `setup()`: inicia el serial (115200), configura pines, apaga LED y buzzer, ajusta la atenuación del ADC del sensor MQ e inicia el DHT22.
-- `loop()`: revisa el botón, lee el DHT22 cada 2 s, lee el sensor MQ cada 1 s, calcula el estado y actualiza LED y buzzer.
+- `setup()`: inicia el serial (115200), configura pines, apaga LED y buzzer, ajusta la atenuación del ADC del sensor MQ e inicia el DHT11.
+- `loop()`: revisa el botón, lee el DHT11 cada 2 s, lee el sensor MQ cada 1 s, calcula el estado y actualiza LED y buzzer.
 
 ---
 
@@ -40,7 +40,7 @@ Detalle de cada función en [`../docs/README.md`](../docs/README.md).
 - **Histéresis (200):** se sube de nivel al superar el umbral y solo se baja cuando la lectura cae 200 unidades por debajo.
 - **Confirmación (3):** hacen falta 3 lecturas seguidas (1 por segundo) en el nuevo nivel para cambiar de estado.
 - **Botón de silencio:** apaga el buzzer en ALERTA, ALARMA y FALLA durante `SILENCIO_MS`. No apaga el LED. El silencio se cancela cuando el nivel vuelve a normal.
-- **Falla:** se declara con 5 lecturas seguidas del MQ en 0, o 3 lecturas fallidas seguidas del DHT22 (cada 2 s). Una alerta o alarma de gas tiene prioridad sobre la falla.
+- **Falla:** se declara con 5 lecturas seguidas del MQ en 0, o 3 lecturas fallidas seguidas del DHT11 (cada 2 s). Una alerta o alarma de gas tiene prioridad sobre la falla.
 
 ---
 
@@ -85,5 +85,5 @@ Valores de `estado`: 0 = WARMUP, 1 = NORMAL, 2 = ALERTA, 3 = ALARMA, 4 = FALLA. 
 ## Limitaciones
 
 - Los umbrales están en valores crudos del ADC, **no en ppm**. El sensor MQ requiere calibración y el prototipo **no reemplaza a un detector de CO certificado**.
-- El DHT22 solo se usa para mostrar temperatura/humedad y detectar su propia falla; no influye en la alarma de gas.
+- El DHT11 solo se usa para mostrar temperatura/humedad y detectar su propia falla; no influye en la alarma de gas.
 - `WARMUP_MS` y `SILENCIO_MS` están reducidos para pruebas; para uso real deben aumentarse.
