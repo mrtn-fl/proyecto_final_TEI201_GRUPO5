@@ -35,17 +35,17 @@ Planos técnicos con cotas
 **Unidades:** Milímetros (mm)  
 **Escala:** 1:1 (dimensiones reales)
 
-**Dimensiones externas:** [X mm × Y mm × Z mm]  
+**Dimensiones externas:** 182 mm × 82 mm × 62 mm  
 **Peso estimado:** [XXX gramos]  
-**Material:** [PLA, ABS, PETG, etc.]
+**Material:** MDF de 5,5 mm (corte láser)
 
 ---
 
 ## Consideraciones de Diseño
 
 ### Funcionales
-- [ ] Acceso a puertos USB/alimentación
-- [ ] Ventilación adecuada
+- [x] Acceso a puertos USB/alimentación
+- [x] Ventilación adecuada
 - [ ] Protección de componentes
 - [ ] Fácil acceso para mantenimiento
 - [ ] Resistencia a condiciones ambientales
@@ -53,21 +53,11 @@ Planos técnicos con cotas
 ### Fabricación
 - [ ] Imprimible sin soportes excesivos
 - [ ] Tolerancias de ensamble (+0.2mm)
-- [ ] Grosor de pared mínimo 2mm
+- [x] Grosor de pared mínimo 2mm
 - [ ] Sin ángulos imposibles (overhangs <45°)
 
 ---
 
 ## Configuración de Impresión 3D (si fue utilizada)
 
-**Impresora:** [Modelo]  
-**Material:** [PLA/ABS/PETG]  
-**Calidad de capa:** 0.2mm  
-**Relleno:** 20-30%  
-**Soportes:** [Sí/No - dónde]  
-**Temperatura nozzle:** [°C]  
-**Temperatura cama:** [°C]  
-**Velocidad:** [mm/s]
-
-**Tiempo estimado de impresión:** [X horas]  
-**Peso de material:** [X gramos]
+No se utilizó impresión 3D: el encapsulado se fabricó en MDF de 5,5 mm con corte láser.
