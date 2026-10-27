@@ -22,7 +22,7 @@ Ensamble_Principal
 ├── Encapsulado_Inferior
 ├── Encapsulado_Superior
 ├── ESP32_DevKit
-├── Sensor_DHT22
+├── Sensor_DHT11
 ├── LED_Indicador
 ├── Soporte_Bateria
 ├── Bracket_Montaje
@@ -34,9 +34,10 @@ Documentar las juntas principales y sus restricciones
 
 ### Parámetros
 Listar parámetros principales utilizados:
-- `ancho_total = 120mm`
-- `alto_total = 80mm`
-- `grosor_pared = 2mm`
+- `largo_total = 182mm`
+- `ancho_total = 82mm`
+- `alto_total = 62mm`
+- `grosor_pared = 5.5mm`
 
 ---
 
