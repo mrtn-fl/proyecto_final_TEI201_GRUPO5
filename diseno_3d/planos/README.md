@@ -19,6 +19,50 @@ Para cada componente crítico del encapsulado:
 
 ---
 
+## Planos Entregados
+
+### Plano de conjunto del encapsulado: `plano_conjunto_v3.pdf`
+
+**Título del plano:** CoStop_Completo  
+**Autor:** Vicente Pincheira, 26-10-2026  
+**Hoja:** 1/1  
+**Unidades:** milímetros (mm)  
+**Material:** MDF 5,5 mm, corte láser
+
+**Contenido del plano:**
+- Vista lateral larga, vista del extremo, vista superior e isométrica (referencia)
+- Dimensiones externas: **182 × 82 × 62 mm**
+- Uniones tipo "dedos" entre paredes
+- 3 ranuras de ventilación en el lateral largo
+- Agujero frontal Ø17 mm (MQ-7)
+- Tapa: 4 agujeros de fijación Ø9 mm, agujero del LED Ø5 mm y agujero del buzzer Ø7 mm
+- Ventana lateral derecha de 16 × 12,7 mm (DHT11)
+- Ventana posterior de 8,5 × 3,8 mm (micro-USB del TP4056)
+
+Las decisiones detrás de cada una de estas dimensiones están en [`../JUSTIFICACION_DISENO.md`](../JUSTIFICACION_DISENO.md).
+
+### Cumplimiento de lo requerido
+
+- [x] Vistas: frontal, lateral, superior e isométrica
+- [x] Cotas principales externas
+- [x] Unidades en mm
+- [x] Cajetín con título, autor y fecha
+- [ ] Cajetín con escala, material, versión e integrantes del equipo
+- [ ] Tabla de piezas
+- [ ] Corte A-A
+- [ ] Planos de detalle de los componentes del encapsulado
+- [ ] Tolerancias indicadas
+
+### Pendiente para la versión final
+
+- Completar el cajetín (escala, material, versión, integrantes)
+- Agregar la tabla de piezas (paredes, base, tapa)
+- Agregar el corte A-A con el interior de la caja
+- Agregar las aberturas del pulsador de silencio y del interruptor general, que aún no aparecen en el plano
+- Corregir el nombre grabado de "CoStop" a "COStop"
+
+---
+
 ## Estándares de Planos
 
 ### Vistas Ortogonales Requeridas
