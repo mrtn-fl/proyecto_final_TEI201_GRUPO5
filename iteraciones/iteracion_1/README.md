@@ -2,7 +2,7 @@
 
 ## Información General
 
-**Fecha:** [XX/XX/2025]  
+**Fecha:** [XX/XX/2026]  
 **Versión:** v1.0  
 **Estado:** Prototipo alpha - Prueba de concepto  
 **Avance asociado:** Planificación inicial / Avance #1
@@ -24,17 +24,18 @@ Primera versión del prototipo, enfocada en validar la factibilidad técnica del
 ## Componentes Utilizados
 
 ### Hardware
-- Microcontrolador: [Modelo]
+- Microcontrolador: ESP32-S3 Super Mini
 - Sensores:
-  - [Sensor 1]
-  - [Sensor 2]
+  - MQ-7 (monóxido de carbono)
+  - DHT11 (temperatura y humedad)
 - Actuadores:
-  - [Actuador 1]
-- Otros: [Lista]
+  - LED RGB KY-016
+  - Buzzer pasivo
+- Otros: protoboard, botón BOOT del ESP32 usado para silenciar, alimentación por USB (sin batería ni TP4056)
 
 ### Software
 - IDE: Arduino IDE
-- Librerías: [Lista]
+- Librerías: DHT sensor library (Adafruit), Adafruit Unified Sensor
 - Versión código: v1.0
 
 ---
@@ -51,33 +52,39 @@ Incluir en esta carpeta:
 ## Resultados de Testing Inicial
 
 ### Funcionalidad Lograda
-✅ [Función 1]  
-✅ [Función 2]  
-❌ [Función 3 - no funcionó]
+✅ [COMPLETAR: lectura del sensor de gas MQ-7]  
+✅ [COMPLETAR: indicación de estado con LED RGB y buzzer]  
+✅ [COMPLETAR: silencio del buzzer con el botón BOOT]  
+❌ Funcionamiento autónomo (sin batería, dependía del cable USB)
 
 ### Problemas Identificados
 
-1. **Problema 1:**
-   - Descripción: [Detalles]
-   - Causa probable: [Análisis]
-   - Solución propuesta: [Plan]
+1. **Problema 1: sin alimentación autónoma**
+   - Descripción: el prototipo no tenía batería y solo funcionaba conectado por USB
+   - Causa probable: v1 se construyó solo para validar el concepto
+   - Solución propuesta: agregar una batería LiPo con un módulo de carga TP4056 con protección (la batería se calienta y se daña si se carga sin control)
 
-2. **Problema 2:**
-   - Descripción: [Detalles]
-   - Causa probable: [Análisis]
-   - Solución propuesta: [Plan]
+2. **Problema 2: botón no accesible**
+   - Descripción: se usaba el botón BOOT del ESP32 para silenciar, que quedaría dentro de una caja
+   - Causa probable: uso provisorio de un botón ya existente en la placa
+   - Solución propuesta: agregar un pulsador dedicado
+
+3. **Problema 3: montaje no apto para encapsular**
+   - Descripción: el circuito estaba en protoboard
+   - Causa probable: el protoboard sirve para pruebas, no para un montaje compacto y permanente
+   - Solución propuesta: pasar a una placa perforada soldada
 
 ---
 
 ## Aprendizajes
 
 ### Técnicos
-- [Aprendizaje 1]
-- [Aprendizaje 2]
+- El concepto es viable con los sensores y el microcontrolador elegidos [CONFIRMAR]
+- Una batería LiPo necesita un módulo de carga con protección
 
 ### De Diseño
-- [Aprendizaje 1]
-- [Aprendizaje 2]
+- Los controles del usuario (botón e interruptor) deben quedar accesibles desde el exterior
+- Hay que diseñar el circuito pensando en el encapsulado
 
 ---
 
@@ -86,16 +93,17 @@ Incluir en esta carpeta:
 ### Mejoras Planificadas
 
 **Hardware:**
-- [ ] [Mejora 1]
-- [ ] [Mejora 2]
+- [x] Pasar de protoboard a placa soldada
+- [x] Agregar batería LiPo con módulo TP4056
+- [x] Agregar pulsador dedicado
+- [x] Agregar interruptor general (kill switch)
 
 **Software:**
-- [ ] [Mejora 1]
-- [ ] [Mejora 2]
+- [ ] [COMPLETAR: cambios de código, por ejemplo cambiar el pin del botón de 0 (BOOT) a 7]
 
 **Diseño:**
-- [ ] Iniciar diseño de encapsulado
-- [ ] Mejorar ruteo de cables
+- [x] Iniciar diseño de encapsulado
+- [x] Mejorar ruteo de cables (soldadura sobre placa perforada)
 
 ---
 
