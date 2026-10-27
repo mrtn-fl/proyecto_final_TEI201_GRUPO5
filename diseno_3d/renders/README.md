@@ -19,10 +19,10 @@
 
 ### Settings Recomendados
 - **Render Engine:** Local / Cloud
-- **Environment:** [Tipo de iluminación]
+- **Environment:** Iluminación suave, fondo neutro blanco
 - **Resolution:** 1920×1080 o superior
 - **Quality:** High
-- **Exposure:** [Ajustado para visibilidad]
+- **Exposure:** Ajustada para ver los componentes sin sombras excesivas
 - **Effects:** Ambient Occlusion ON
 
 ### Materiales y Apariencias
@@ -45,10 +45,10 @@ Ejemplo:
 
 ## Checklist de Calidad
 
-- [ ] Resolución mínima 1920×1080
-- [ ] Formato PNG (con transparencia si aplica)
+- [x] Resolución mínima 1920×1080
+- [x] Formato PNG (con transparencia si aplica)
 - [ ] Iluminación sin sombras excesivas
-- [ ] Componentes internos visibles en corte
-- [ ] Fondo neutro o contextual apropiado
+- [x] Componentes internos visibles en corte
+- [x] Fondo neutro o contextual apropiado
 - [ ] Sin aliasing o bordes pixelados
 - [ ] Todos los componentes críticos visibles
