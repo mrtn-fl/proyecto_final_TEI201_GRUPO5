@@ -8,7 +8,7 @@ Proyecto final de Taller de Diseño en Ingeniería (TEI201) – Facultad de Inge
   - Benjamin Bidegain 
   - Martin Flores 
   - Vicente Pincheira 
-  - Thomas von Fabeck 
+  - Thomas von Fabeck –
 
 - **ODS Seleccionado:** ODS 3 – Salud y bienestar
 
@@ -18,7 +18,7 @@ Proyecto final de Taller de Diseño en Ingeniería (TEI201) – Facultad de Inge
 
 **COStop** es una alarma doméstica de CO de bajo costo y fácil instalación, dirigida a adultos mayores y familias con niños pequeños en hogares del sur de Chile con calefacción a combustión. No requiere cambiar el sistema de calefacción: hace visible un riesgo que hoy es invisible, avisando con luz y sonido antes de que el CO alcance niveles peligrosos para dar tiempo a ventilar o evacuar.
 
-El prototipo está basado en un **ESP32-S3 Super Mini**. Mide continuamente el gas con un sensor **MQ-7** y la temperatura/humedad con un **DHT11**, funciona con batería LiPo recargable y avisa con un LED RGB y un buzzer. Además, cuando el CO llega a nivel de peligro **envía una alerta por Telegram a un tercero** (familiar o vecino) y registra las lecturas en una **base de datos PostgreSQL en la nube** (API en Railway + Aiven), con respaldo local en la memoria del ESP32 si no hay WiFi:
+El prototipo está basado en un **ESP32-S3 Super Mini**. Mide continuamente el gas con un sensor **MQ-7** y la temperatura/humedad con un **DHT11**, funciona con una batería LiPo conectada directo a la placa y avisa con un LED RGB y un buzzer. Además, cuando el CO llega a nivel de peligro **envía una alerta por Telegram a un tercero** (familiar o vecino) y registra las lecturas en una **base de datos PostgreSQL en la nube** (API en Railway + Aiven), con respaldo local en la memoria del ESP32 si no hay WiFi:
 
 | Estado | LED RGB | Buzzer |
 |---|---|---|
@@ -37,18 +37,18 @@ Un pulsador permite **silenciar** el buzzer por 5 minutos (no desactiva la alarm
 
 - **Versión actual:** v3.0
 - **Última actualización:** 18/11/2026
-- **Estado:** Prototipo final funcional con alertas por Telegram y registro en la nube. Pendiente: calibración del MQ-7 en ppm y testing final.
+- **Estado:** Prototipo final funcional con alertas por Telegram y registro en la nube. Pendiente: calibración del MQ-7 en ppm y testing con usuarios.
 
 ## Resultados clave
 
 | Medida | Resultado | Origen |
 |---|---|---|
 | Costo real del prototipo | $3.580 CLP | BOM |
-| Costo estimado por unidad | ~$42.160 CLP | BOM (precios de referencia) |
+| Costo estimado por unidad | ~$39.870 CLP | BOM (precios de referencia) |
 | Intervalo de lectura de sensores | 2 s | Diseño del firmware |
 | Intervalo de registro (flash + nube) | 10 s en pruebas, 60 s en uso real | Diseño del firmware |
-| Tiempo hasta recibir el Telegram | 5 s | Prueba técnica |
-| Tiempo de respuesta medido | 5 s | Prueba técnica |
+| Tiempo hasta recibir el Telegram | 2 s | Prueba técnica |
+| Tiempo de respuesta medido | 2 s | Prueba técnica |
 | Testing con usuarios | - | — |
 
 ## Estructura del Repositorio
@@ -141,4 +141,4 @@ Ver [FUENTES.md](FUENTES.md).
 
 ## Licencia
 
-Este proyecto es desarrollado como parte del curso TEI201 - Facultad de Ingeniería y Ciencias - Universidad Adolfo Ibáñez. Ver (LICENSE).
+Este proyecto es desarrollado como parte del curso TEI201 - Facultad de Ingeniería y Ciencias - Universidad Adolfo Ibáñez. Ver [LICENSE](LICENSE).
