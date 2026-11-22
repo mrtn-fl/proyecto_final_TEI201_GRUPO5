@@ -1,0 +1,17 @@
+{
+  "name": "costop-servidor",
+  "version": "1.0.0",
+  "description": "API de COStop: recibe lecturas del ESP32 y las guarda en PostgreSQL (Aiven)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "pg": "^8.13.0"
+  },
+  "license": "MIT"
+}
