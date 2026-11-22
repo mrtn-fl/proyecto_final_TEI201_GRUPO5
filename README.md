@@ -38,6 +38,7 @@ Un pulsador permite **silenciar** el buzzer por 5 minutos (no desactiva la alarm
 - **Versión actual:** v3.0
 - **Última actualización:** 18/11/2026
 - **Estado:** Prototipo final funcional con alertas por Telegram y registro en la nube. Pendiente: calibración del MQ-7 en ppm y testing con usuarios.
+- **Servidor en la nube:** https://proyectofinaltei201grupo5-production.up.railway.app ([ver resumen de datos](https://proyectofinaltei201grupo5-production.up.railway.app/api/resumen))
 
 ## Resultados clave
 

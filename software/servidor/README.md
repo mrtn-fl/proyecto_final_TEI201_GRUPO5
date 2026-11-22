@@ -2,6 +2,18 @@
 
 API en Node.js (desplegada en **Railway**) que recibe las lecturas del ESP32 y las guarda en **PostgreSQL (Aiven)**.
 
+## Servidor desplegado
+
+**URL base:** https://proyectofinaltei201grupo5-production.up.railway.app
+
+| Ruta | Enlace |
+|---|---|
+| Estado del servidor | [/salud](https://proyectofinaltei201grupo5-production.up.railway.app/salud) |
+| Últimas lecturas | [/api/lecturas](https://proyectofinaltei201grupo5-production.up.railway.app/api/lecturas) |
+| Resumen 24 h | [/api/resumen](https://proyectofinaltei201grupo5-production.up.railway.app/api/resumen) |
+| Exportar CSV | [/api/lecturas.csv](https://proyectofinaltei201grupo5-production.up.railway.app/api/lecturas.csv) |
+
+La escritura (POST) requiere API key, que no se publica en el repositorio.
 ## Archivos
 
 | Archivo | Descripción |
