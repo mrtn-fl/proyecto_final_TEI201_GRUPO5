@@ -2,7 +2,7 @@
 
 ## Información General
 
-**Fecha:** [XX/XX/2026]  
+**Fecha:** 16/10/2026  
 **Versión:** v1.0  
 **Estado:** Prototipo alpha - Prueba de concepto  
 **Avance asociado:** Planificación inicial / Avance #1
@@ -99,7 +99,7 @@ Incluir en esta carpeta:
 - [x] Agregar interruptor general (kill switch)
 
 **Software:**
-- [ ] [COMPLETAR: cambios de código, por ejemplo cambiar el pin del botón de 0 (BOOT) a 7]
+- [x] Cambiar el pin del botón de 0 (BOOT) a 7 (hecho en v3)
 
 **Diseño:**
 - [x] Iniciar diseño de encapsulado

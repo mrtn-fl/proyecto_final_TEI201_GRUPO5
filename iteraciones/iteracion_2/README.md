@@ -1,153 +1,88 @@
-# Iteración 2 - Primera Mejora Significativa
+# Iteración 2 – Placa soldada, batería y encapsulado
 
-## Información General
+## Información general
 
-**Fecha:** [XX/XX/2025]  
-**Versión:** v2.0  
-**Estado:** Prototipo funcional mejorado  
+**Fecha:** 26/10/2026
+**Versión:** v2.0
+**Estado:** Prototipo funcional mejorado
 **Avance asociado:** Avance #2
 
 ---
 
-## Descripción
-
-Segunda versión del prototipo, incorporando feedback de la iteración 1 y del Avance #1. Incluye mejoras significativas en funcionalidad y primeros pasos en diseño de encapsulado.
-
-**Objetivos de esta iteración:**
-- Corregir problemas identificados en v1
-- Agregar funcionalidades adicionales
-- Iniciar diseño 3D del encapsulado
-- Realizar primeras pruebas con usuarios
-
----
-
-## Cambios Respecto a v1
+## Cambios respecto a v1
 
 ### Hardware
 **Agregado:**
-- [Componente nuevo 1]
-- [Componente nuevo 2]
+- Batería LiPo 3,7 V 1200 mAh + módulo TP4056 con protección
+- Pulsador dedicado para silenciar el buzzer
+- Interruptor general (kill switch)
 
 **Modificado:**
-- [Cambio 1] - Razón: [Justificación]
-- [Cambio 2] - Razón: [Justificación]
+- Protoboard → placa perforada soldada. Razón: conexiones permanentes y compactas para meter el circuito en una caja.
+- Botón BOOT → pulsador dedicado. Razón: el BOOT queda dentro de la caja y no se puede presionar.
 
 **Removido:**
-- [Componente removido] - Razón: [Justificación]
+- Alimentación solo por cable USB. Razón: el equipo debe funcionar de forma autónoma.
 
 ### Software
-**Nuevas funcionalidades:**
-- [Feature 1]
-- [Feature 2]
+Sin cambios significativos respecto a v1 (misma máquina de estados, umbrales e histéresis).
 
-**Optimizaciones:**
-- [Optimización 1]
-- [Optimización 2]
-
-**Bugs corregidos:**
-- [Bug 1 de v1]
-- [Bug 2 de v1]
-
-### Diseño Mecánico
-- Primer diseño de encapsulado en Fusion 360
-- Prototipo impreso en 3D
-- Integración de componentes en carcasa
+### Diseño mecánico
+- Primer encapsulado diseñado en Fusion 360: caja de MDF 5,5 mm, 182 × 82 × 62 mm, corte láser.
+- 3 ranuras de ventilación, ventanas para DHT11 y micro-USB, agujeros para LED, buzzer y MQ-7.
+- Tapa fijada con 4 tornillos para mantenimiento.
+- Detalle en [`diseno_3d/JUSTIFICACION_DISENO.md`](../../diseno_3d/JUSTIFICACION_DISENO.md).
 
 ---
 
-## Fotos del Prototipo v2
+## Fotos del prototipo v2
 
-Incluir en esta carpeta:
-- `v2_prototipo_completo.jpg`
-- `v2_circuito_integrado.jpg`
-- `v2_encapsulado_inicial.jpg`
-- `v2_testing_usuario.jpg`
+[COMPLETAR: subir fotos a esta carpeta, ej. `v2_placa_soldada.jpg`, `v2_encapsulado.jpg`]
 
 ---
 
-## Resultados de Testing
+## Funcionalidad lograda
 
-### Funcionalidad Lograda
-✅ [Función 1]  
-✅ [Función 2]  
-✅ [Función 3]  
-⚠️ [Función 4 - parcial]
+✅ Detección de gas con MQ-7 y estados con LED/buzzer (heredado de v1)
+✅ Funcionamiento con batería
+✅ Silencio con pulsador dedicado
+⚠️ Integración completa en la caja: en proceso
 
-### Feedback del Avance #2
+## Feedback del Avance #2
 
-**Comentarios del profesor/ayudante:**
-1. [Comentario 1]
-   - Acción: [Plan de mejora para v3]
-
-2. [Comentario 2]
-   - Acción: [Plan de mejora para v3]
-
-### Testing con Usuarios (2-3 personas)
-
-**Resultados cuantitativos:**
-- Facilidad de uso promedio: [X/5]
-- Satisfacción promedio: [X/5]
-
-**Feedback cualitativo:**
-- Positivo: [Comentarios]
-- A mejorar: [Comentarios]
+1. [COMPLETAR: comentario del profesor/ayudante]
+   - Acción para v3: [COMPLETAR]
 
 ---
 
-## Problemas Pendientes
+## Problemas pendientes (para v3)
 
-1. **Problema 1:**
-   - Descripción: [Detalles]
-   - Prioridad: Alta/Media/Baja
-   - Plan para v3: [Solución propuesta]
-
-2. **Problema 2:**
-   - Descripción: [Detalles]
-   - Prioridad: Alta/Media/Baja
-   - Plan para v3: [Solución propuesta]
+1. **Aberturas del pulsador e interruptor en la caja**
+   - Prioridad: Alta
+   - Plan: agregarlas al modelo en Fusion 360.
+2. **Umbrales sin calibrar**
+   - Descripción: `T_ALERTA` y `T_ALARMA` están en valores crudos de ADC, no en ppm.
+   - Prioridad: Media
+   - Plan: procedimiento de calibración documentado en el código v3 (base en aire limpio)
+3. **El aviso solo sirve si alguien está en la casa**
+   - Prioridad: Alta
+   - Plan: alertas remotas por Telegram y registro de datos en la nube (v3)
+4. **Nombre grabado "CoStop" vs "COStop"**
+   - Prioridad: Baja
 
 ---
 
 ## Comparación v1 vs v2
 
-| Aspecto | v1 | v2 | Mejora |
-|---------|----|----|--------|
-| Sensores funcionales | 2/3 | 3/3 | ✅ |
-| Tiempo de respuesta | 500ms | 200ms | ↓60% |
-| Consumo energético | 250mA | 180mA | ↓28% |
-| Encapsulado | ❌ | Prototipo | ✅ |
-| Usuarios testeados | 0 | 2 | ✅ |
+| Aspecto | v1 | v2 |
+|---|---|---|
+| Montaje | Protoboard | Placa perforada soldada |
+| Alimentación | USB | LiPo 1200 mAh + TP4056 |
+| Botón de silencio | BOOT (inaccesible en caja) | Pulsador dedicado |
+| Encendido/apagado | Desconectar USB | Interruptor |
+| Encapsulado | ❌ | Caja MDF diseñada |
 
----
+## Archivos
 
-## Plan para Iteración 3 (Versión Final)
-
-### Mejoras Críticas
-
-**Hardware:**
-- [ ] [Mejora crítica 1]
-- [ ] [Mejora crítica 2]
-
-**Software:**
-- [ ] [Optimización 1]
-- [ ] [Feature faltante]
-
-**Diseño:**
-- [ ] Refinar encapsulado
-- [ ] Mejorar accesibilidad
-- [ ] Finalizar sistema de montaje
-
-**Testing:**
-- [ ] Testear con 5+ usuarios
-- [ ] Validar métricas ODS
-- [ ] Instalación en contexto real
-
----
-
-## Archivos en esta Carpeta
-
-- `v2_codigo.ino` - Código de esta versión
-- `v2_esquema.png` - Esquema del circuito actualizado
-- `v2_modelo3d.f3d` - Primer diseño en Fusion 360
-- `v2_fotos/` - Fotografías del prototipo
-- `v2_feedback.pdf` - Compilación de comentarios recibidos
+- Código: igual a v1 ([`../iteracion_1/v1_codigo.ino`](../iteracion_1/v1_codigo.ino))
+- Modelo 3D: [`diseno_3d/fusion360/CoStop.f3d`](../../diseno_3d/fusion360/CoStop.f3d)
