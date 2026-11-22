@@ -17,7 +17,7 @@ Documentación técnica del hardware de **COStop**, alarma doméstica de monóxi
 | ESP32-S3 Super Mini | Microcontrolador | Pequeño (24,8 × 18,2 mm), ADC de 12 bits para el MQ-7 y WiFi integrado para Telegram y la base de datos |
 | Sensor MQ-7 (módulo) | Detecta CO | Sensor específico para monóxido de carbono, bajo costo y disponible en la universidad |
 | DHT11 | Temperatura y humedad | Permite registrar las condiciones del ambiente y detectar falla del sensor; económico |
-| LED RGB KY-016 | Indicador visual | Un solo LED muestra los 5 estados del sistema con colores distintos |
+| LED RGB KY-016 | Indicador visual | Un solo LED muestra los 4 estados del sistema con colores distintos |
 | Buzzer pasivo | Alarma sonora | Aviso audible aunque la persona no esté mirando el equipo |
 | Pulsador | Silenciar buzzer | Control accesible desde fuera de la caja |
 | Interruptor (kill switch) | Encendido/apagado | Apagar sin desconectar la batería |
@@ -42,7 +42,6 @@ Pines según `software/src/costop/costop.ino` (v3):
 | Batería LiPo | + | Interruptor |
 | Batería LiPo | − | GND |
 
-> ⚠️ El calefactor del MQ-7 está especificado para 5 V. Si se alimenta directo desde la LiPo (3,7 V) la lectura puede variar.
 
 ---
 
@@ -69,16 +68,6 @@ Pines según `software/src/costop/costop.ino` (v3):
 - Batería accesible al abrir la tapa para cambiarla o cargarla.
 - Componentes en módulos estándar y baratos (ver BOM), reemplazables individualmente.
 - [COMPLETAR: si usaron conectores/headers en vez de soldar directo, mencionarlo]
-
----
-
-## Especificaciones técnicas
-
-**Alimentación:** Batería LiPo 3,7 V, 1200 mAh, conectada directo a la placa
-**Consumo:** [COMPLETAR: medir con multímetro, en mA]
-**Autonomía:** [COMPLETAR: medir o calcular = 1200 mAh / consumo]
-**Dimensiones:** 182 × 82 × 62 mm (encapsulado MDF)
-**Peso:** [COMPLETAR: pesar el prototipo]
 
 ---
 

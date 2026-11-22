@@ -50,8 +50,8 @@ Sin cambios significativos respecto a v1 (misma máquina de estados, umbrales e 
 
 ## Feedback del Avance #2
 
-1. [COMPLETAR: comentario del profesor/ayudante]
-   - Acción para v3: [COMPLETAR]
+1. Eliminar el módulo TP4056 y conectar la batería directo a la placa [COMPLETAR: confirmar que este fue el comentario del Avance #2]
+   - Acción para v3: se eliminó el TP4056 (ver [`../iteracion_3/README.md`](../iteracion_3/README.md))
 
 ---
 

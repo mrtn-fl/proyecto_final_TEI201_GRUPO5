@@ -52,9 +52,9 @@ Incluir en esta carpeta:
 ## Resultados de Testing Inicial
 
 ### Funcionalidad Lograda
-✅ [COMPLETAR: lectura del sensor de gas MQ-7]  
-✅ [COMPLETAR: indicación de estado con LED RGB y buzzer]  
-✅ [COMPLETAR: silencio del buzzer con el botón BOOT]  
+✅ Lectura del sensor de gas MQ-7  
+✅ Indicación de estado con LED RGB y buzzer  
+✅ Silencio del buzzer con el botón BOOT  
 ❌ Funcionamiento autónomo (sin batería, dependía del cable USB)
 
 ### Problemas Identificados

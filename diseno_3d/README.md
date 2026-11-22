@@ -1,6 +1,6 @@
 # Diseño 3D - Documentación
 
-## ⚠️ REQUISITO CRÍTICO
+## REQUISITO CRÍTICO
 
 El modelo 3D debe incluir **TODOS** los componentes del prototipo:
 - ✅ Encapsulado exterior completo
@@ -36,7 +36,7 @@ Planos técnicos con cotas
 **Escala:** 1:1 (dimensiones reales)
 
 **Dimensiones externas:** 182 mm × 82 mm × 62 mm  
-**Peso estimado:** [XXX gramos]  
+**Peso:** [COMPLETAR: pesar el prototipo, el mismo dato que en hardware/README.md]  
 **Material:** MDF de 5,5 mm (corte láser)
 
 ---
@@ -46,15 +46,15 @@ Planos técnicos con cotas
 ### Funcionales
 - [x] Acceso a puertos USB/alimentación
 - [x] Ventilación adecuada
-- [ ] Protección de componentes
-- [ ] Fácil acceso para mantenimiento
-- [ ] Resistencia a condiciones ambientales
+- [x] Protección de componentes
+- [-] Fácil acceso para mantenimiento
+- [-] Resistencia a condiciones ambientales
 
 ### Fabricación
-- [ ] Imprimible sin soportes excesivos
-- [ ] Tolerancias de ensamble (+0.2mm)
+- [-] Imprimible sin soportes excesivos
+- [x] Tolerancias de ensamble (+0.2mm)
 - [x] Grosor de pared mínimo 2mm
-- [ ] Sin ángulos imposibles (overhangs <45°)
+- [x] Sin ángulos imposibles (overhangs <45°)
 
 ---
 
