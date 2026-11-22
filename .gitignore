@@ -1,0 +1,29 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Arduino IDE / compilación
+build/
+*.bin
+*.elf
+*.hex
+*.map
+.vscode/
+.idea/
+
+# Fusion 360 (respaldos temporales)
+*.f3d.bak
+~$*
+
+# Office temporales
+~$*.docx
+~$*.pptx
+~$*.xlsx
+
+# Credenciales (WiFi, Telegram, API key)
+secrets.h
+.env
+
+# Servidor Node
+node_modules/
