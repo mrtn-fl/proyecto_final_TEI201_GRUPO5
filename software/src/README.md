@@ -1,89 +1,45 @@
 # Código Fuente
 
-## Archivos principales
+## `costop/costop.ino`
 
-### `codigo_esp32/codigo_esp32.ino`
-Sketch único del firmware para el ESP32-S3 Super Mini. Todo el código (pines, parámetros, lectura de sensores, máquina de estados y control de salidas) está en este archivo.
+Firmware v3 del ESP32-S3 Super Mini. Arduino IDE exige que el `.ino` esté en una carpeta con el mismo nombre, por eso la ruta es `costop/costop.ino`.
 
-> Arduino IDE exige que el `.ino` esté dentro de una carpeta con el mismo nombre, por eso la ruta es `codigo_esp32/codigo_esp32.ino`.
+## `costop/secrets_example.h`
 
-**Estructura:**
-- `setup()`: inicia el serial (115200), configura pines, apaga LED y buzzer, ajusta la atenuación del ADC del sensor MQ e inicia el DHT11.
-- `loop()`: revisa el botón, lee el DHT11 cada 2 s, lee el sensor MQ cada 1 s, calcula el estado y actualiza LED y buzzer.
+Plantilla de credenciales. Copiarla como `secrets.h` en la misma carpeta y completar. `secrets.h` **no se sube a GitHub** (está en `.gitignore`).
 
 ---
 
-## Funciones del código
+## Funciones
 
 | Función | Qué hace |
-|---------|----------|
-| `setColor(r, g, b)` | Enciende el LED RGB (soporta ánodo o cátodo común) |
-| `buzzerOn()` / `buzzerOff()` | Activa o apaga el buzzer (activo con HIGH, o pasivo con `tone`) |
-| `leerMQ()` | Promedia 4 lecturas ADC del sensor MQ |
-| `objetivo(raw, actual)` | Define el nivel (0 normal, 1 alerta, 2 alarma) aplicando histéresis |
-| `revisarBoton()` | Antirrebote (50 ms) y silencio del buzzer |
-| `actualizarSalidas()` | Patrones de LED y buzzer según el estado |
+|---|---|
+| `setColor(r, g, b)` | Enciende los canales del LED RGB |
+| `hayWiFi()` | `true` si el WiFi está habilitado y conectado |
+| `revisarWiFi()` | Reconecta cada `REINTENTO_WIFI` sin bloquear el `loop()` |
+| `enviarTelegram(msg)` | Envía un mensaje al `TG_CHAT` por la Bot API (HTTPS) |
+| `enviarNube(sensor, valor)` | POST JSON a la API (`x-api-key`); no envía valores `NaN` |
+| `guardarFlash()` | Agrega una línea a `/datos.csv` en LittleFS |
+| `descargar()` / `info()` | Imprimen el CSV o el número de registros por Serial |
+| `evaluarAlarma()` | Calcula el nivel con histéresis y actualiza LED, buzzer y Telegram |
+| `revisarBoton()` | Antirrebote de 50 ms; silencia el buzzer en peligro |
+| `actualizarCalentamiento()` | LED azul intermitente hasta `TIEMPO_CALENTAMIENTO` |
 
-Detalle de cada función en [`../docs/README.md`](../docs/README.md).
-
----
-
-## Comportamiento
-
-| Estado | LED RGB | Buzzer |
-| Calentamiento (`WARMUP`) | Azul intermitente | Apagado |
-| Normal (`NORMAL`) | Verde, destello breve cada 3 s ("latido") | Apagado |
-| Alerta (`ALERTA`) | Amarillo intermitente | Pitidos cortos |
-| Alarma (`ALARMA`) | Rojo fijo | Continuo |
-| Falla de sensor (`FALLA`) | Magenta intermitente | Doble pitido |
-
-- **Histéresis (200):** se sube de nivel al superar el umbral y solo se baja cuando la lectura cae 200 unidades por debajo.
-- **Confirmación (3):** hacen falta 3 lecturas seguidas (1 por segundo) en el nuevo nivel para cambiar de estado.
-- **Botón de silencio:** apaga el buzzer en ALERTA, ALARMA y FALLA durante `SILENCIO_MS`. No apaga el LED. El silencio se cancela cuando el nivel vuelve a normal.
-- **Falla:** se declara con 5 lecturas seguidas del MQ en 0, o 3 lecturas fallidas seguidas del DHT11 (cada 2 s). Una alerta o alarma de gas tiene prioridad sobre la falla.
-
----
-
-## Parámetros ajustables (inicio del archivo)
-
-```cpp
-const int PIN_DHT = 4, PIN_MQ = 1, PIN_BUZZER = 5;
-const int PIN_R = 6, PIN_G = 8, PIN_B = 9;
-const int PIN_BTN = 0;               // botón BOOT (provisorio); con pulsador real: 7
-
-const int T_ALERTA = 1500;           // umbral alerta (ADC 0-4095)
-const int T_ALARMA = 2500;           // umbral alarma
-const int HIST = 200;                // histéresis
-const int CONFIRMAR = 3;             // lecturas seguidas para cambiar de nivel
-const unsigned long WARMUP_MS = 20000;    // prototipo; equipo real: minutos
-const unsigned long SILENCIO_MS = 30000;  // prototipo; equipo real: 300000 (5 min)
-```
-
-Opciones de hardware: `BUZZER_ACTIVO` (true/false) y `LED_ANODO_COMUN` (false para el KY-016).
-
----
+Detalle en [`../docs/README.md`](../docs/README.md).
 
 ## Estándares de código
 
-- Variables y funciones: `camelCase`. Constantes: `PIN_*`, `T_*`, `*_MS` en mayúsculas (`UPPER_SNAKE_CASE`).
-- Comentarios en español, explicando el porqué.
-
----
+- Constantes en `#define` y `UPPER_SNAKE_CASE`; variables y funciones en `camelCase`.
+- Comentarios en español.
+- Mensajes de Serial con prefijo: `[ok]`, `[ERROR]`, `[aviso]`, `[wifi]`, `[telegram]`, `[nube]`, `[lectura]`, `[guardado]`, `[boton]`.
+- Sin `delay()` en el `loop()`: todo se temporiza con `millis()` para que la alarma nunca se bloquee.
 
 ## Debugging
 
-Monitor Serie a **115200 baudios**. Cada 2 s imprime:
+Monitor Serie a 115200. Cada 2 s:
 
 ```
-MQ=<valor> | T=<°C> | H=<%> | estado=<n> | DHT_fallas=<n>
+[lectura] CO=<0-4095>  T=<°C>  H=<%>  nivel=<0|1|2>
 ```
 
-Valores de `estado`: 0 = WARMUP, 1 = NORMAL, 2 = ALERTA, 3 = ALARMA, 4 = FALLA. También imprime `Calentando...` al iniciar y `>> Alarma silenciada` al presionar el botón. El código no usa `#define DEBUG` ni prefijos `[INFO]`/`[ERROR]`.
-
----
-
-## Limitaciones
-
-- Los umbrales están en valores crudos del ADC, **no en ppm**. El sensor MQ requiere calibración y el prototipo **no reemplaza a un detector de CO certificado**.
-- El DHT11 solo se usa para mostrar temperatura/humedad y detectar su propia falla; no influye en la alarma de gas.
-- `WARMUP_MS` y `SILENCIO_MS` están reducidos para pruebas; para uso real deben aumentarse.
+Al iniciar imprime las redes WiFi visibles (`[scan]`) para diagnosticar la conexión.

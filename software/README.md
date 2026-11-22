@@ -1,112 +1,121 @@
-# Software – Documentacion
+# Software – Documentación
 
-Esta carpeta contiene el firmware y la documentación técnica de **COStop**, la alarma doméstica de monóxido de carbono (CO) de bajo costo para hogares del sur de Chile con calefacción a combustión.
+Firmware y servidor de **COStop**, alarma doméstica de monóxido de carbono (CO).
 
-El firmware corre en un **ESP32-S3 Super Mini**, lee un sensor de gas MQ y un sensor DHT11 (temperatura/humedad), y comunica el estado del ambiente con un LED RGB y un buzzer.
+El firmware corre en un **ESP32-S3 Super Mini**: lee el sensor **MQ-7** (CO) y el **DHT11** (temperatura/humedad), avisa con LED RGB y buzzer, manda alertas por **Telegram** a un tercero y registra las lecturas en una base de datos **PostgreSQL (Aiven)** a través de una API en **Railway**. Si no hay WiFi, la alarma local sigue funcionando y los datos quedan respaldados en la memoria flash (LittleFS).
 
 ## Contenido
 
 | Carpeta | Descripción |
-| `src/` | Código fuente del firmware (`src/codigo_esp32/codigo_esp32.ino`) |
-| `librerias/` | Dependencias del proyecto y guía de instalación |
-| `docs/` | Diagramas de flujo, documentación de funciones, manuales y troubleshooting |
+|---|---|
+| `src/costop/` | Firmware (`costop.ino`) y plantilla de credenciales (`secrets_example.h`) |
+| `servidor/` | API Node.js (Railway) + esquema de la base de datos PostgreSQL (Aiven) |
+| `librerias/` | Dependencias y versiones |
+| `docs/` | Funciones, flujo de datos, diagramas y troubleshooting |
 
 ---
 
-## Stack Tecnológico
+## Arquitectura
 
-- **Plataforma:** ESP32-S3 Super Mini (Espressif)
-- **Lenguaje:** C/C++ (Arduino framework)
-- **IDE:** Arduino IDE 2.x
-- **Librerías principales:**
-  - DHT sensor library (Adafruit) – v[x]
-  - Adafruit Unified Sensor – v[x]
-  - Soporte de placas ESP32 (Espressif) – v[x]
+```
+                 ┌───────────────► Telegram (alerta a un familiar/vecino)
+ MQ-7 ─┐         │
+ DHT11 ─┼─► ESP32-S3 ──WiFi──► API Railway (Node.js) ──► PostgreSQL Aiven
+ Botón ─┘    │   │
+             │   └──► LittleFS /datos.csv (respaldo local, sin WiFi)
+             └──► LED RGB + buzzer (aviso local, funciona siempre)
+```
 
-El detalle completo está en [`librerias/README.md`](librerias/README.md).
+## Stack tecnológico
 
----
+- **Firmware:** C/C++ (Arduino framework), Arduino IDE 2.x, núcleo ESP32 de Espressif
+- **Librerías firmware:** DHT sensor library, Adafruit Unified Sensor, y del núcleo ESP32: WiFi, WiFiClientSecure, HTTPClient, LittleFS
+- **Servidor:** Node.js 18+, Express, pg
+- **Base de datos:** PostgreSQL en Aiven
+- **Hosting de la API:** Railway
+- **Alertas:** Telegram Bot API
 
-## Instalación y Configuración
-
-### 1. Instalar Arduino IDE
-Descargar Arduino IDE 2.x desde https://www.arduino.cc/en/software e instalarlo.
-
-### 2. Instalar el soporte para ESP32
-1. Abrir `Archivo > Preferencias`.
-2. En *Gestor de URLs adicionales de tarjetas* agregar:
-   `https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`
-3. Ir a `Herramientas > Placa > Gestor de tarjetas`, buscar **esp32** (Espressif Systems) e instalar.
-
-### 3. Instalar las librerías
-`Herramientas > Administrar bibliotecas` e instalar **DHT sensor library** y **Adafruit Unified Sensor** (ver `librerias/README.md`).
-
-### 4. Cargar el código
-1. Abrir `src/codigo_esp32/codigo_esp32.ino`.
-2. Seleccionar la placa **ESP32S3 Dev Module** (o la equivalente para el Super Mini) y el puerto COM correspondiente.
-3. Compilar y subir.
-4. Abrir el Monitor Serie a **115200 baudios** para ver las lecturas.
-
-> Conexiones eléctricas en `hardware/README.md`.
+Versiones en [`librerias/README.md`](librerias/README.md).
 
 ---
 
-## Configuración de Parámetros
+## Instalación del firmware
 
-Los parámetros ajustables están al inicio del código:
+1. Instalar Arduino IDE 2.x y el soporte **esp32 by Espressif** (URL del gestor de tarjetas: `https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`).
+2. Instalar **DHT sensor library** y **Adafruit Unified Sensor** desde el Gestor de bibliotecas.
+3. En `src/costop/`, copiar `secrets_example.h` como **`secrets.h`** y completar WiFi, token y chat_id de Telegram, URL del servidor y API key. `secrets.h` está en `.gitignore` y **no se sube**.
+4. Abrir `src/costop/costop.ino`, elegir placa **ESP32S3 Dev Module** y el puerto.
+5. Compilar y subir. Monitor Serie a **115200 baudios**.
+
+> El WiFi del ESP32 solo funciona en redes de **2,4 GHz**.
+
+## Instalación del servidor y la base de datos
+
+Ver [`servidor/README.md`](servidor/README.md).
+
+---
+
+## Parámetros ajustables (inicio de `costop.ino`)
 
 ```cpp
-// Pines (ESP32-S3 Super Mini)
-const int PIN_DHT    = 4;   // Datos del DH11
-const int PIN_MQ     = 1;   // Entrada analógica del sensor MQ
-const int PIN_BUZZER = 5;   // Buzzer
-const int PIN_R      = 6;   // LED RGB - rojo
-const int PIN_G      = 8;   // LED RGB - verde
-const int PIN_B      = 9;   // LED RGB - azul
-const int PIN_BTN    = 0;   // Botón de silencio (BOOT, provisorio; con pulsador real: 7)
+#define PIN_MQ7     1     // AO del MQ-7 (ADC1, compatible con WiFi)
+#define PIN_DHT     4
+#define PIN_R       8     // LED KY-016
+#define PIN_G       9
+#define PIN_B       10
+#define PIN_BUZZER  5
+#define PIN_BTN     7     // pulsador de silencio (a GND)
 
-// Umbrales y tiempos
-const int T_ALERTA = 1500;                 // umbral de alerta (ADC 0-4095)
-const int T_ALARMA = 2500;                 // umbral de alarma
-const int HIST = 200;                      // histéresis
-const int CONFIRMAR = 3;                   // lecturas seguidas para cambiar de nivel
-const unsigned long WARMUP_MS = 20000;     // calentamiento (prototipo; equipo real: minutos)
-const unsigned long SILENCIO_MS = 30000;   // silencio (prototipo; equipo real: 300000 = 5 min)
+#define MQ7_BASE         800    // lectura en aire limpio (calibrar)
+#define UMBRAL_ALERTA    2000   // LED amarillo
+#define UMBRAL_PELIGRO   3000   // LED rojo + buzzer + Telegram
+#define HISTERESIS       150
+#define TIEMPO_CALENTAMIENTO  20000UL
+
+#define INTERVALO_LECTURA  2000UL   // lectura de sensores
+#define INTERVALO_LOG      10000UL  // registro flash + nube (uso real: 60000)
+#define REINTENTO_WIFI     15000UL
+#define SILENCIO_MS        300000UL // silencio del buzzer (5 min)
+#define USAR_WIFI          true     // false = modo solo local
 ```
 
 ---
 
-## Arquitectura del Software
+## Estados del sistema
 
-El firmware funciona como una **máquina de estados** que se ejecuta de forma continua. Prioridad de evaluación: calentamiento → alarma → alerta → falla → normal.
+| Estado | LED RGB | Buzzer | Telegram |
+|---|---|---|---|
+| Calentamiento | Azul intermitente | Apagado | "CoStop listo" al terminar |
+| Normal | Verde fijo | Apagado | "niveles normales otra vez" si venía de peligro |
+| Alerta (≥ 2000) | Amarillo fijo | Apagado | — |
+| Peligro (≥ 3000) | Rojo fijo | Continuo (silenciable 5 min) | Alerta al tercero (una vez por evento) |
 
-```
-Encendido → CALENTAMIENTO → NORMAL ⇄ ALERTA ⇄ ALARMA
-                              │
-                              └──→ FALLA DE SENSOR (solo si no hay alerta ni alarma de gas)
-```
-
-### Módulos principales
-1. **Inicialización (`setup`)** – Configura pines, serial (115200), ADC del sensor MQ y DHT11; el calentamiento corre durante los primeros `WARMUP_MS`.
-2. **Lectura de sensores** – MQ cada 1 s (promedio de 4 lecturas) y DHT11 cada 2 s.
-3. **Procesamiento** – Compara con los umbrales usando **histéresis** y **confirmación de 3 lecturas consecutivas** para evitar falsas alarmas.
-4. **Actuación** – Controla el LED RGB y el buzzer según el estado.
-
-
-### Estados del sistema
-
-| Estado | LED RGB | Buzzer |
-| Calentamiento (warm-up) | Azul intermitente | Apagado |
-| Normal | Verde (destello breve cada 3 s) | Apagado |
-| Alerta | Amarillo intermitente | Pitidos cortos |
-| Alarma | Rojo fijo | Continuo |
-| Falla de sensor | Magenta intermitente | Doble pitido |
-
-> Diagrama de flujo y documentación de funciones: ver `docs/`.
+- **Histéresis (150):** baja de peligro a alerta bajo 2850, y a normal bajo 1850, para que no parpadee en el umbral.
+- **Botón:** en peligro apaga el buzzer por `SILENCIO_MS`; el LED sigue rojo. Si el nivel baja, el silencio se cancela.
+- **Sin WiFi:** LED, buzzer y respaldo en flash siguen funcionando; reintenta conectarse cada 15 s sin bloquear la alarma.
 
 ---
 
-## Comunicación
+## Datos
 
-El prototipo actual **no usa WiFi ni Bluetooth**: funciona de forma autónoma y local, de modo que no depende de conexión a internet. Esto es intencional, ya que los hogares objetivo (zonas rurales del sur de Chile) pueden no tener conectividad estable. Por eso no se incluye API/endpoints.
+| Destino | Qué guarda | Cada cuánto |
+|---|---|---|
+| PostgreSQL (vía API) | Una fila por sensor: `co`, `temperatura`, `humedad` | `INTERVALO_LOG` |
+| LittleFS `/datos.csv` | `seg,co_raw,temp,hum` | `INTERVALO_LOG` |
 
+Comandos por Monitor Serie: `d` descarga el CSV, `i` cuenta registros, `b` borra el archivo.
+
+---
+
+## Seguridad
+
+- Las credenciales van en `secrets.h`, fuera del repositorio.
+- La API exige el header `x-api-key` para escribir.
+- El ESP32 usa HTTPS con `setInsecure()` (no verifica el certificado del servidor): aceptable para el prototipo, mejorable cargando el certificado raíz.
+
+## Limitaciones
+
+- Umbrales en valores crudos del ADC, **no en ppm**; el MQ-7 requiere calibración.
+- El DHT11 solo se registra; no influye en la alarma.
+- `TIEMPO_CALENTAMIENTO` está reducido para pruebas.
+- **No reemplaza un detector de CO certificado.**

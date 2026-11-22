@@ -1,128 +1,74 @@
-# Documentación de Software 
+# Documentación de Software
 
-## Contenido
-
-### Diagramas de Flujo
-
-**Cálculo del estado en cada ciclo del `loop()`**
+## Diagramas
 
 ![Diagrama de estados](diagrama_estados.png)
 
-
-**Cálculo del nivel con histéresis (cada 1 s)**
-
 ![Diagrama de nivel](diagrama_nivel.png)
 
+## Flujo del `loop()` (v3)
 
-### Documentación de Funciones
-
-**setColor(bool r, bool g, bool b)**
-- **Propósito:** enciende el LED RGB. Si `LED_ANODO_COMUN` es true, invierte los niveles.
-- **Parámetros:** `r`, `g`, `b` (1 = componente encendido).
-- **Retorna:** nada.
-- **Ejemplo:**
-```cpp
-setColor(1, 1, 0);  // amarillo
+```
+loop()
+├─ revisarWiFi()              reconecta si se cayó (cada 15 s)
+├─ actualizarCalentamiento()  LED azul hasta TIEMPO_CALENTAMIENTO
+├─ revisarBoton()             silencio del buzzer
+├─ cada 2 s:  leer MQ-7 y DHT11 → evaluarAlarma()
+├─ cada 10 s: guardarFlash() + enviarNube(co, temperatura, humedad)
+└─ comandos Serial: d / i / b
 ```
 
-**buzzerOn() / buzzerOff()**
-- **Propósito:** enciende o apaga el buzzer. Con buzzer activo usa `digitalWrite`; con pasivo usa `tone(…, 2000)` / `noTone`.
-- **Parámetros:** ninguno. **Retorna:** nada.
+## Lógica de nivel con histéresis
 
-**int leerMQ()**
-- **Propósito:** reduce el ruido promediando 4 lecturas ADC del sensor MQ.
-- **Parámetros:** ninguno.
-- **Retorna:** `int` entre 0 y 4095.
-- **Ejemplo:**
-```cpp
-rawMQ = leerMQ();
-```
+| Lectura MQ-7 | Nivel anterior | Nivel nuevo |
+|---|---|---|
+| ≥ 3000 | cualquiera | 2 (peligro) |
+| 2850 – 2999 | 2 | 2 |
+| 2000 – 2999 | 0 o 1 (o 2 bajo 2850) | 1 (alerta) |
+| 1850 – 1999 | 2 | 1 |
+| 1850 – 1999 | 0 o 1 | se mantiene |
+| < 1850 | cualquiera | 0 (normal) |
 
-**int objetivo(int raw, int actual)**
-- **Propósito:** determina el nivel que corresponde a una lectura, con histéresis para no oscilar.
-- **Parámetros:** `raw` (lectura ADC), `actual` (nivel vigente).
-- **Retorna:** `0` normal, `1` alerta, `2` alarma.
-- **Ejemplo:**
-```cpp
-int obj = objetivo(rawMQ, nivel);
-```
+## Funciones principales
 
-**revisarBoton()**
-- **Propósito:** lee el botón con antirrebote de 50 ms; al presionarlo en ALERTA, ALARMA o FALLA activa el silencio del buzzer durante `SILENCIO_MS`.
-- **Parámetros:** ninguno. **Retorna:** nada.
+**`void evaluarAlarma()`**
+- Calcula el nivel según la tabla anterior.
+- Nivel 2: LED rojo, buzzer (salvo silenciado) y un único Telegram por evento (`alertaEnviada`).
+- Nivel 1: LED amarillo, buzzer apagado.
+- Nivel 0: LED verde; si venía de peligro envía "niveles normales otra vez".
 
-**actualizarSalidas()**
-- **Propósito:** define el patrón de LED y buzzer según el estado y aplica el silencio.
-- **Parámetros:** ninguno (usa la variable global `estado`). **Retorna:** nada.
+**`void enviarNube(const char* sensor, float valor)`**
+- Envía `{"dispositivo":"costop-1","sensor":"co","valor":812.00}` a `SERVER_URL` con header `x-api-key`.
+- Si no hay WiFi o el valor es `NaN`, no envía (el dato queda en flash).
 
-**Patrones por estado**
+**`void enviarTelegram(const String& msg)`**
+- POST a `https://api.telegram.org/bot<TOKEN>/sendMessage` con `chat_id` y `text`.
 
-| Estado | Patrón LED | Patrón buzzer |
-| WARMUP | azul, 200 ms encendido cada 400 ms | apagado |
-| NORMAL | verde, 80 ms cada 3 s | apagado |
-| ALERTA | amarillo, 200 ms cada 1 s | 200 ms cada 1 s |
-| ALARMA | rojo fijo | continuo |
-| FALLA | magenta, dos destellos de 150 ms cada 2 s | doble pitido sincronizado |
+**`void revisarBoton()`**
+- Botón en `INPUT_PULLUP` (presionado = LOW), antirrebote de 50 ms.
+- Solo actúa en peligro: apaga el buzzer durante `SILENCIO_MS`.
 
+## API del servidor
 
-## Manual de Instalación
+Ver [`../servidor/README.md`](../servidor/README.md).
 
-1. Instalar Arduino IDE 2.x desde https://www.arduino.cc/en/software.
-2. En `Archivo > Preferencias`, agregar en *Gestor de URLs adicionales de tarjetas*:
-   `https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json`
-3. En `Herramientas > Placa > Gestor de tarjetas`, instalar **esp32** (Espressif Systems).
-4. En `Herramientas > Administrar bibliotecas`, instalar **DHT sensor library** y **Adafruit Unified Sensor**.
-5. Abrir `software/src/codigo_esp32/codigo_esp32.ino`.
-6. Seleccionar la placa **ESP32S3 Dev Module** y el puerto COM.
-7. Compilar y subir.
-8. Abrir el Monitor Serie a **115200 baudios**.
+## Manual de usuario (resumen)
 
-Conexiones (pines): DHT11 → 4, MQ → 1, buzzer → 5, LED RGB → R 6 / G 8 / B 9, botón → 0 (BOOT, provisorio).
-
-
-## Manual de Operación
-
-### Encendido del Sistema
-1. Alimentar el dispositivo por USB o fuente.
-2. El LED parpadea en **azul** durante el calentamiento (20 s en el prototipo; minutos en equipo real).
-
-### Operación Normal
-1. **Verde** con destello breve cada 3 s: ambiente normal, sin sonido (el destello indica que el equipo está funcionando).
-2. **Amarillo intermitente + pitidos cortos:** alerta. Ventilar el lugar.
-3. **Rojo fijo + sonido continuo:** alarma. Ventilar y evacuar.
-4. **Magenta intermitente + doble pitido:** falla de sensor. Ver Troubleshooting.
-5. El botón silencia el buzzer 30 s (5 min en equipo real); el LED sigue activo y el silencio se cancela cuando el nivel vuelve a normal.
-
-### Apagado del Sistema
-1. Desconectar la alimentación. Al reencender se repite el calentamiento.
-
+1. Cargar el equipo por micro-USB y encenderlo con el interruptor.
+2. Esperar que el LED pase de azul a verde.
+3. **Amarillo:** abrir ventanas y revisar estufas.
+4. **Rojo + sonido:** apagar la estufa, ventilar y salir del lugar. El contacto registrado recibe un Telegram.
+5. El botón silencia el sonido 5 minutos, pero la alarma sigue activa.
 
 ## Troubleshooting
 
-### Problemas Comunes
-
-**Problema 1: Error "DHT.h: No such file or directory"**
-- Causa probable: no está instalada la librería DHT.
-- Solución: instalar DHT sensor library y Adafruit Unified Sensor.
-
-**Problema 2: LED magenta con doble pitido (falla)**
-- Causa probable: el MQ entrega 0 de forma sostenida (5 lecturas) o el DHT11 falla 3 lecturas seguidas (cableado suelto o pin incorrecto).
-- Solución: revisar el cableado, ver `DHT_fallas` y `MQ=` en el Monitor Serie y reiniciar.
-
-**Problema 3: Falsas alarmas al encender**
-- Causa probable: el MQ aún no se estabiliza.
-- Solución: dejar completar el calentamiento y, si persiste, recalibrar `T_ALERTA` y `T_ALARMA`.
-
-**Problema 4: No aparece el puerto COM**
-- Causa probable: cable solo de carga o falta de driver.
-- Solución: usar un cable de datos; mantener presionado BOOT al conectar el USB.
-
-**Problema 5: El LED no muestra el color esperado**
-- Causa probable: LED de ánodo común.
-- Solución: cambiar `LED_ANODO_COMUN` a `true`.
-
-**Problema 6: El buzzer no suena o suena distinto**
-- Causa probable: tipo de buzzer mal configurado.
-- Solución: `BUZZER_ACTIVO = true` para activo, `false` para pasivo.
-
-> COStop no usa WiFi ni Bluetooth, por lo que no hay problemas de conexión de red.
+| Problema | Causa probable | Solución |
+|---|---|---|
+| `[aviso] sin WiFi` | Red de 5 GHz, clave mala o señal débil | Usar red 2,4 GHz; revisar `secrets.h`; ver lista `[scan]` |
+| `[telegram] codigo 401` | Token inválido o revocado | Generar token nuevo con @BotFather |
+| `[telegram] codigo 400` | `chat_id` incorrecto o el usuario no le escribió al bot | Enviar `/start` al bot y revisar el chat_id |
+| `[nube] co -> 401` | API key distinta a la de Railway | Igualar `API_KEY` en `secrets.h` y Railway |
+| `[nube] co -> -1` | URL mala o servidor caído | Revisar `SERVER_URL` y `/salud` del servidor |
+| `[ERROR] LittleFS no monto` | Partición sin formatear | Se formatea sola (`begin(true)`); si persiste, cambiar esquema de partición |
+| Siempre alerta/peligro | MQ-7 sin calentar o sin calibrar | Esperar calentamiento; recalibrar umbrales |
+| No compila: `secrets.h` no encontrado | Falta crear el archivo | Copiar `secrets_example.h` como `secrets.h` |

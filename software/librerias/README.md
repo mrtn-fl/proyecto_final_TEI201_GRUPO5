@@ -1,40 +1,32 @@
 # Librerías
 
-## Librerías Estándar (Arduino IDE)
+## Firmware (Arduino IDE)
 
-El código solo incluye una librería directamente (`#include <DHT.h>`):
+| Librería | Versión | Fuente | Uso en el código |
+|---|---|---|---|
+| esp32 by Espressif Systems (núcleo) | 3.3.12 | Gestor de tarjetas | Placa, ADC, `tone` |
+| DHT sensor library (Adafruit) | 1.4.7 | Gestor de bibliotecas | `#include <DHT.h>` – lectura DHT11 |
+| Adafruit Unified Sensor | 1.1.15 | Gestor de bibliotecas | Dependencia de DHT |
+| WiFi | incluida en el núcleo esp32 | — | `#include <WiFi.h>` – conexión |
+| WiFiClientSecure | incluida en el núcleo esp32 | — | HTTPS a Telegram y Railway |
+| HTTPClient | incluida en el núcleo esp32 | — | Peticiones POST |
+| LittleFS | incluida en el núcleo esp32 | — | Respaldo `/datos.csv` en flash |
 
-1. **DHT sensor library** (Adafruit) – v[ x ]
-   - Propósito: leer temperatura y humedad del DHT11 (`dht.readTemperature()`, `dht.readHumidity()`).
-   - Instalación: `Herramientas > Administrar bibliotecas` y buscar "DHT sensor library".
 
-2. **Adafruit Unified Sensor** – v[ x ]
-   - Propósito: dependencia que requiere la librería DHT.
-   - Instalación: buscar "Adafruit Unified Sensor" (el IDE suele ofrecer instalarla junto con DHT).
+**Instalación:** `Herramientas > Administrar bibliotecas`, buscar "DHT sensor library" e instalar con sus dependencias.
 
+## Servidor (Node.js)
 
----
+Definidas en [`../servidor/package.json`](../servidor/package.json) y se instalan con `npm install`:
 
-## Soporte de placa
+| Paquete | Versión | Uso |
+|---|---|---|
+| express | ^4.21.0 | Servidor HTTP y rutas de la API |
+| pg | ^8.13.0 | Conexión a PostgreSQL (Aiven) |
 
-- **esp32 by Espressif Systems** – v[x] (Gestor de tarjetas). Aporta `analogRead`, `analogSetPinAttenuation`, `tone`/`noTone` y `Serial.printf`.
-- Placa a seleccionar: **ESP32S3 Dev Module** (o equivalente para el Super Mini).
+## Librerías personalizadas
 
----
+No se usan librerías personalizadas ni modificadas.
 
-## Librerías Personalizadas/Modificadas
-
-El proyecto **no usa librerías personalizadas ni modificadas**; esta carpeta no necesita código adicional.
-
----
-
-## Dependencias Completas
-
-| Librería | Versión | Fuente | Obligatoria |
-|----------|---------|--------|-------------|
-| esp32 (Espressif) | [x] | Gestor de tarjetas de Arduino IDE | Si |
-| DHT sensor library | [x] | Arduino Library Manager (Adafruit) | Si |
-| Adafruit Unified Sensor | [x] | Arduino Library Manager (Adafruit) | Si |
-| WiFi / Bluetooth | — | No por ahora
-
-Declarar también las librerías en [`FUENTES.md`](../../FUENTES.md), en la raíz del repositorio.
+Todas están declaradas en [`FUENTES.md`](../../FUENTES.md).
+   
