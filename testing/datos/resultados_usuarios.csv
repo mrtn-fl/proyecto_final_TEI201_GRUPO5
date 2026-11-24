@@ -1,0 +1,5 @@
+id,perfil,edad,azul_correcto,verde_correcto,amarillo_correcto,rojo_correcto,colores_4_de_4,silencio_sin_ayuda,tiempo_silencio_s,entendio_telegram,facilidad_1a5,confianza_1a5
+P1,Hermano,24,1,1,1,1,1,1,5.2,1,5,4
+P2,Madre,52,0,1,1,1,0,1,8.4,1,4,4
+P3,Roommate,22,1,1,1,1,1,1,6.1,1,5,5
+P4,Padre,55,1,1,1,1,1,1,7.5,1,4,4
